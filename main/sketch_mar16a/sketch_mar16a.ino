@@ -33,6 +33,14 @@ SoftwareSerial mySerial(3, 2); //SIM800L Tx & Rx is connected to Arduino #3 & #2
 #define BPM_SEND_SMS  100
 
 
+/** Variable declaration */
+String sPulseRate = "Pulse Rate: ";
+String sOxygenSaturation = "Oxygen Saturation: ";
+
+
+/** Pre-processor directives */
+//#define USE_SMS
+
 void setup()
 {
   Serial.begin(9600);
@@ -58,10 +66,10 @@ void setup()
   oled.println("Monitoring:");
   /** second row */
   oled.set1X();
-  oled.println("Pulse Rate:");
+  oled.println(sPulseRate);
   /** third row */
   oled.set1X();
-  oled.print("Oxygen Saturation: ");
+  oled.print(sOxygenSaturation);
 
   ///////////////////////////////////////////////////////////////////////////////////
   //Begin serial communication with Arduino and SIM800L
@@ -83,6 +91,7 @@ void setup()
 void loop()
 {
 
+  #ifdef USE_SMS
   if (finger_present() == true){
 
     if (get_BPM() > BPM_NOT_VALID){
@@ -95,7 +104,7 @@ void loop()
     Serial.println("Place your finger.");
     delay(1000);
   }
-
+  #endif
 }
 
 void send_SMS(String message){
