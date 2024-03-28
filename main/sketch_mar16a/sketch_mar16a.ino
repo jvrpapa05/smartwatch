@@ -102,7 +102,11 @@ void loop() {
       2. When the BMP is valid. */
       sPulseRate = stringPR + String(get_BPM());
   
-      Serial.println(sPulseRate);
+      //Serial.println(sPulseRate);
+
+      oled.clear();
+      oled.println("Monitoring:");
+      oled.println(sPulseRate);
 
       /** Clearing the variable content */
       sPulseRate = "";
@@ -189,7 +193,7 @@ void spo2_sensor(){
 
 
 float get_BPM(){
-    long irValue = particleSensor.getIR();
+  long irValue = particleSensor.getIR();
 
   if (checkForBeat(irValue) == true)
   {
@@ -211,6 +215,8 @@ float get_BPM(){
       beatAvg /= RATE_SIZE;
     }
   }
+
+  Serial.println(beatsPerMinute);
 
   return beatsPerMinute;
 }
