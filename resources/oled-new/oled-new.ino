@@ -29,7 +29,7 @@ void setup() {
   oled.clear();
 
   // first row
-  oled.println("Monitoring");
+  oled.println("Monitorings");
 
   // second row
   oled.set1X();

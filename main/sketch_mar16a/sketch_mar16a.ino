@@ -1,7 +1,14 @@
 #include <Wire.h>
 #include "MAX30105.h"
-
 #include "heartRate.h"
+
+/** Libraries for the OLED */
+#include "SSD1306Ascii.h"
+#include "SSD1306AsciiAvrI2c.h"
+/** Defined values for the OLED */
+#define I2C_ADDRESS 0x3C
+SSD1306AsciiAvrI2c oled;
+
 
 MAX30105 particleSensor;
 
@@ -43,6 +50,18 @@ void setup()
   particleSensor.setPulseAmplitudeRed(0x0A); //Turn Red LED to low to indicate sensor is running
   particleSensor.setPulseAmplitudeGreen(0); //Turn off Green LED
 
+  /** OLED initialization. */
+  oled.begin(&Adafruit128x32, I2C_ADDRESS);
+  oled.setFont(Adafruit5x7);
+  oled.clear();
+  /** first row */
+  oled.println("Monitoring:");
+  /** second row */
+  oled.set1X();
+  oled.println("Pulse Rate:");
+  /** third row */
+  oled.set1X();
+  oled.print("Oxygen Saturation: ");
 
   ///////////////////////////////////////////////////////////////////////////////////
   //Begin serial communication with Arduino and SIM800L
