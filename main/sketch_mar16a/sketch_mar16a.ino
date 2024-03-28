@@ -66,6 +66,7 @@ void setup()
   oled.println("Monitoring:");
   /** second row */
   oled.set1X();
+  oled.println();
   oled.println(sPulseRate);
   /** third row */
   oled.set1X();
@@ -75,9 +76,10 @@ void setup()
   //Begin serial communication with Arduino and SIM800L
   mySerial.begin(9600);
 
-  Serial.println("Initializing...");
+  Serial.println("Initializing, please wait 1 second. ");
   delay(1000);
 
+  #ifdef USE_SMS
   mySerial.println("AT"); //Once the handshake test is successful, it will back to OK
   updateSerial();
   mySerial.println("AT+CSQ"); //Signal quality test, value range is 0-31 , 31 is the best
@@ -86,10 +88,33 @@ void setup()
   updateSerial();
   mySerial.println("AT+CREG?"); //Check whether it has registered in the network
   updateSerial();
+  #endif
 }
 
-void loop()
-{
+void loop() {
+  if (finger_present() == true){
+
+    if (get_BPM() > BPM_NOT_VALID){
+      /** Print to OLED only when:
+      1. The finger is present.
+      2. When the BMP is valid. */
+      sPulseRate = sPulseRate + String(get_BPM());
+  
+      Serial.println(sPulseRate);
+
+      /** Clearing the variable content */
+      sPulseRate = "";
+    }else{
+      oled.clear();
+      oled.println("Monitoring:");
+      oled.print("BPM is not valid!");
+    }
+    
+  }else{
+    oled.clear();
+    oled.println("Monitoring:");
+    oled.print("Place finger.");
+  }
 
   #ifdef USE_SMS
   if (finger_present() == true){
