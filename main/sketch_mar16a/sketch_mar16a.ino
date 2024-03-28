@@ -34,7 +34,9 @@ SoftwareSerial mySerial(3, 2); //SIM800L Tx & Rx is connected to Arduino #3 & #2
 
 
 /** Variable declaration */
-String sPulseRate = "Pulse Rate: ";
+#define stringPR "Pulse Rate: "
+String sPulseRate = stringPR;
+
 String sOxygenSaturation = "Oxygen Saturation: ";
 
 
@@ -98,7 +100,7 @@ void loop() {
       /** Print to OLED only when:
       1. The finger is present.
       2. When the BMP is valid. */
-      sPulseRate = sPulseRate + String(get_BPM());
+      sPulseRate = stringPR + String(get_BPM());
   
       Serial.println(sPulseRate);
 
