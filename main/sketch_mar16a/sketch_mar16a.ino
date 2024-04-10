@@ -29,8 +29,8 @@ SoftwareSerial mySerial(3, 2); //SIM800L Tx & Rx is connected to Arduino #3 & #2
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-#define BPM_NOT_VALID 100
-#define BPM_SEND_SMS  140
+#define BPM_NOT_VALID 40
+#define BPM_SEND_SMS  50
 
 
 /** Variable declaration */
@@ -41,7 +41,7 @@ String sOxygenSaturation = "Oxygen Saturation: ";
 
 
 /** Pre-processor directives */
-//#define USE_SMS
+#define USE_SMS
 
 void setup()
 {
@@ -140,18 +140,31 @@ void loop() {
 }
 
 void send_SMS(String message){
+  oled.clear();
+  oled.println("Sending SMS...");
+
   mySerial.println("AT"); //Once the handshake test is successful, it will back to OK
   updateSerial();
 
   mySerial.println("AT+CMGF=1"); // Configuring TEXT mode
   updateSerial();
+
+  oled.println("Configuring text.");
+
   mySerial.println("AT+CMGS=\"+639755065672\"");//change ZZ with country code and xxxxxxxxxxx with phone number to sms
+  
+  oled.println("Sending to: 09755065672");
+
   updateSerial();
   mySerial.print(message); //text content
   updateSerial();
   mySerial.write(26);
 
   updateSerial();
+
+  oled.println("SMS sent!");
+
+  delay(2000);
 }
 
 
