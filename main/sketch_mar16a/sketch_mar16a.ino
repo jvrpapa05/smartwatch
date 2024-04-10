@@ -32,6 +32,10 @@ SoftwareSerial mySerial(3, 2); //SIM800L Tx & Rx is connected to Arduino #3 & #2
 #define BPM_NOT_VALID 40
 #define BPM_SEND_SMS  50
 
+#define CONTACT_NO "+639755065672"
+// Convert the CONTACT_NO constant to a string
+#define CONTACT_NO_STRING String(CONTACT_NO)
+
 
 /** Variable declaration */
 #define stringPR "Pulse Rate: "
@@ -43,10 +47,14 @@ String sOxygenSaturation = "Oxygen Saturation: ";
 /** Pre-processor directives */
 #define USE_SMS
 
+void(* resetFunc) (void) = 0;
+
 void setup()
 {
   Serial.begin(9600);
   Serial.println("Initializing...");
+
+
 
   // Initialize sensor
   if (!particleSensor.begin(Wire, I2C_SPEED_FAST)) //Use default I2C port, 400kHz speed
@@ -150,10 +158,14 @@ void send_SMS(String message){
   updateSerial();
 
   oled.println("Configuring text.");
-
-  mySerial.println("AT+CMGS=\"+639755065672\"");//change ZZ with country code and xxxxxxxxxxx with phone number to sms
   
-  oled.println("Sending to: 09755065672");
+  // Construct the string with the CONTACT_NO value
+  String myMessage = "AT+CMGS=\"+" + CONTACT_NO_STRING + "\"";
+
+  // Print the message
+  mySerial.println(myMessage);//change ZZ with country code and xxxxxxxxxxx with phone number to sms
+
+  oled.println("No: 09755065672");
 
   updateSerial();
   mySerial.print(message); //text content
@@ -255,10 +267,10 @@ void updateSerial()
   delay(500);
   while (Serial.available()) 
   {
-    mySerial.write(Serial.read());//Forward what Serial received to Software Serial Port
+    mySerial.write(Serial.read()); //Forward what Serial received to Software Serial Port
   }
   while(mySerial.available()) 
   {
-    Serial.write(mySerial.read());//Forward what Software Serial received to Serial Port
+    Serial.write(mySerial.read()); //Forward what Software Serial received to Serial Port
   }
 }
