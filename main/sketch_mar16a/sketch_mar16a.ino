@@ -113,7 +113,8 @@ void loop() {
     }else{
       oled.clear();
       oled.println("Monitoring:");
-      oled.print("BPM is not valid!");
+      oled.print("Data might not valid!");
+      oled.println("\nBPM: " + String(get_BPM()));
     }
     
   }else{
