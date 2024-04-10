@@ -12,7 +12,7 @@ SSD1306AsciiAvrI2c oled;
 
 MAX30105 particleSensor;
 
-const byte RATE_SIZE = 4; //Increase this for more averaging. 4 is good.
+const byte RATE_SIZE = 255; //Increase this for more averaging. 4 is good.
 byte rates[RATE_SIZE]; //Array of heart rates
 byte rateSpot = 0;
 long lastBeat = 0; //Time at which the last beat occurred
@@ -29,8 +29,8 @@ SoftwareSerial mySerial(3, 2); //SIM800L Tx & Rx is connected to Arduino #3 & #2
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-#define BPM_NOT_VALID 10
-#define BPM_SEND_SMS  100
+#define BPM_NOT_VALID 100
+#define BPM_SEND_SMS  140
 
 
 /** Variable declaration */
@@ -144,7 +144,7 @@ void send_SMS(String message){
 
   mySerial.println("AT+CMGF=1"); // Configuring TEXT mode
   updateSerial();
-  mySerial.println("AT+CMGS=\"+639451127639\"");//change ZZ with country code and xxxxxxxxxxx with phone number to sms
+  mySerial.println("AT+CMGS=\"+639755065672\"");//change ZZ with country code and xxxxxxxxxxx with phone number to sms
   updateSerial();
   mySerial.print(message); //text content
   updateSerial();
